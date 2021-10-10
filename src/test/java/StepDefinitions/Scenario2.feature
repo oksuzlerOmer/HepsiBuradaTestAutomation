@@ -4,7 +4,6 @@ Feature: navigating categories and adding to cart features
 
 
   Scenario: user opens hepsiburada.com homepage, navigates under a category and adds a product to cart
-    #firstPart
     Given the user has opened hepsiburada.com homepage on their browser
     And the user clicks on "Kitap, Müzik, Film, Hobi" text
     Given a dropdown menu opens

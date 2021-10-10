@@ -24,6 +24,7 @@ public class Scenario2Steps {
 	public void the_user_clicks_on_text(String string) {
 		scenario2PF=new Scenario2PF(LoginSteps.driver);
 		actions= new Actions(LoginSteps.driver);
+		LoginSteps.driver.navigate().to(LoginSteps.HOMEPAGEURL);
 		scenario2PF.getWantedTopCategory().click();
 	}
 
