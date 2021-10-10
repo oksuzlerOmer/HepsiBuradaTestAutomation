@@ -115,8 +115,4 @@ public class Scenario3PF2 {
 		this.shipmentGroups = shipmentGroups;
 	}
 	
-	
-	
-	
-	
 }

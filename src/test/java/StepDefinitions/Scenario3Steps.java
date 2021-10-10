@@ -2,15 +2,14 @@ package StepDefinitions;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.awt.Desktop;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -21,6 +20,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import PageFactory.Scenario3PF2;
+import io.cucumber.java.Before;
+import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -37,13 +38,18 @@ public class Scenario3Steps {
 
 	List<WebElement> extraShipmentFees=null;
 
-	@Given("the user logged in")
-	public void the_user_logged_in() throws InterruptedException {
+	@Before
+	public void initTest() {
 		System.setProperty("webdriver.chrome.driver","C:\\Users\\omarr\\eclipse-workspace\\HepsiBuradaBDDTest06102021\\src\\test\\resources\\drivers\\chromedriver.exe");
 		driver=new ChromeDriver();
 		driver.manage().window().maximize();
 		scenario3PF=new Scenario3PF2(driver);
 		driver.navigate().to("https://www.hepsiburada.com/uyelik/giris");
+	}
+	
+	@Given("the user logged in")
+	public void the_user_logged_in() throws InterruptedException {
+		
 		driver.manage().timeouts().implicitlyWait(3000, TimeUnit.MILLISECONDS);
 		driver.findElement(By.id("txtUserName")).clear();
 		driver.findElement(By.id("txtUserName")).sendKeys("testhb6102021@gmail.com");
@@ -173,6 +179,7 @@ public class Scenario3Steps {
 		assert(totalAddsUp);
 	}
 
+	//this step can't check if the delivery date will be in the next year.
 	@Then("the approximately calculated shipping dates should not be later than the calculated delivery dates.")
 	public void the_approximately_calculated_shipping_dates_should_not_be_later_than_the_calculated_delivery_dates() throws ParseException {
 		List<WebElement> shipmentGroups=scenario3PF.getShipmentGroups();
@@ -187,6 +194,11 @@ public class Scenario3Steps {
 			
 		}
 	}
-
-
+	
+	@After
+	public void endTest() throws IOException {
+		File htmlFile = new File("C:\\Users\\omarr\\eclipse-workspace\\HepsiBuradaBDDTest06102021\\target\\htmlReports.html");
+		Desktop.getDesktop().browse(htmlFile.toURI());
+		driver.quit();
+	}
 }
