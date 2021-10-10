@@ -22,7 +22,7 @@ public class Scenario3PF2 {
 	@FindBy(id="continue_step_btn")
 	private WebElement btnCompletePurchase;
 	
-	@FindBy(id="shipping")
+	@FindBy(xpath="//div[@class=\"accordion_header_1Id0k\"]")
 	private WebElement divShipmentAddress;
 
 	@FindBy(xpath="//div[@id=\"shippingAddressContainer\"]/div[not(contains(@id,\"selectedAddressBox\"))]")

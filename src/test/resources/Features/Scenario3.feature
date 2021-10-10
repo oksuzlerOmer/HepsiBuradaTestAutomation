@@ -2,7 +2,7 @@
 #Scenario: the user adds 8 products to their cart and proceeds to the delivery options screen
 Feature: adding different products to cart and choosing from different delivery options
 
-  @smoke
+@smoke
   Scenario: the user adds eight products to their cart and proceeds to the delivery options screen
     Given the user logged in
     Given the user has added random eight products to their cart.

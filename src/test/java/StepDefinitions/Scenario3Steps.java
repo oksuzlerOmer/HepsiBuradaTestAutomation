@@ -199,6 +199,6 @@ public class Scenario3Steps {
 	public void endTest() throws IOException {
 		File htmlFile = new File("C:\\Users\\omarr\\eclipse-workspace\\HepsiBuradaBDDTest06102021\\target\\htmlReports.html");
 		Desktop.getDesktop().browse(htmlFile.toURI());
-		driver.quit();
+//		driver.quit();
 	}
 }
