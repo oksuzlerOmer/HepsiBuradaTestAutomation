@@ -5,7 +5,7 @@ Feature: adding different products to cart and choosing from different delivery 
 @smoke
   Scenario: the user adds eight products to their cart and proceeds to the delivery options screen
     Given the user logged in
-    Given the user has added random eight products to their cart.
+    Given the user has added predefined eight products to their cart.
     Given the user opens their cart
     When the user clicks "Alýþveriþi tamamla" button (sc3)
     Then the user is navigated to delivery options phase.

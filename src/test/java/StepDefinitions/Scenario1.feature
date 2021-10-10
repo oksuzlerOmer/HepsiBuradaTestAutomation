@@ -8,7 +8,6 @@ Feature: logging in, product searching, and adding products to cart features
     #firstPart
     Given the user has opened hepsiburada.com homepage on their browser
       And the user hovers over "Giriþ Yap" text
-    Given a dropdown menu opens
      Then the user clicks "Giriþ Yap" text in the dropdown menu
      Then check password input is existent
      When if existent enters <username> and <password>

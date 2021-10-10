@@ -16,9 +16,7 @@ public class LoginPagePF {
 	@FindBy(xpath="//button[contains(text(),'Giriþ yap')]")
 	private WebElement btnLogin;
 
-	private WebDriver driver;
 	public LoginPagePF(WebDriver driver) {
-		this.driver=driver;
 		PageFactory.initElements(driver, this);
 	}
 

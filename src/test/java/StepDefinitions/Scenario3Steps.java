@@ -18,6 +18,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterTest;
 
 import Factory.DriverFactory;
 import Factory.DriverFactory.DriverType;
@@ -40,15 +41,6 @@ public class Scenario3Steps {
 
 	List<WebElement> extraShipmentFees=null;
 
-	//	@Before
-	//	public void initTest() {
-	//		System.setProperty("webdriver.chrome.driver","C:\\Users\\omarr\\eclipse-workspace\\HepsiBuradaBDDTest06102021\\src\\test\\resources\\drivers\\chromedriver.exe");
-	//		driver=new ChromeDriver();
-	//		driver.manage().window().maximize();
-	//		scenario3PF=new Scenario3PF2(driver);
-	//		driver.navigate().to("https://www.hepsiburada.com/uyelik/giris");
-	//	}
-
 	@Given("the user logged in")
 	public void the_user_logged_in() throws InterruptedException {
 		chromeDriver=(ChromeDriver) DriverFactory.createDriver(DriverType.CHROME);
@@ -67,9 +59,8 @@ public class Scenario3Steps {
 
 	}
 
-	@Given("the user has added random eight products to their cart.")
-	public void the_user_has_added_random_eight_products_to_their_cart() throws InterruptedException {
-		//fix chromedriver.exe location
+	@Given("the user has added predefined eight products to their cart.")
+	public void the_user_has_added_predefined_eight_products_to_their_cart() throws InterruptedException {
 		String[] urls= {
 				"https://www.hepsiburada.com/koycegiz-bali-bahar-bali-850-g-cam-kavanoz-p-HBV0000122DZL",
 				"https://www.hepsiburada.com/reeder-p13-blue-16-gb-3-gb-ram-reeder-turkiye-garantili-p-HBV00000KJI11",
@@ -142,6 +133,8 @@ public class Scenario3Steps {
 		scenario3PF.getUnselectedAddress().click();
 		Thread.sleep(2000);
 		String str2=el.getText()+"";
+		//I compare the html code when an address was selected and compare it to when the other address was selected.
+		//They could still be the same for the 2 different addresses. This algorithm needs improvement.
 		assertTrue(!str1.equals(str2));
 		scenario3PF.getUnselectedAddress().click();
 		Thread.sleep(1000);
@@ -151,7 +144,7 @@ public class Scenario3Steps {
 	public void a_delivery_option_with_more_cost_than_the_default_exists() {
 		extraShipmentFees=scenario3PF.getExtraShippingFees();
 		extraShipmentFeesCount=extraShipmentFees.size();
-		//		assertTrue(extraShipmentFeesCount>0);
+		assertTrue(extraShipmentFeesCount>0);
 	}
 
 	@Then("the user selects the extra cost option")
@@ -162,6 +155,8 @@ public class Scenario3Steps {
 		float totalExtrafees=0;
 
 		currentShipmentTotal=separatePriceFromText(scenario3PF.getDivCurrentShipmentTotal());
+		
+		//all the extra shipment cost options are selected
 		for (WebElement el : extraShipmentFees) {
 			el.click();
 			totalExtrafees+=separatePriceFromText(el);
@@ -169,7 +164,8 @@ public class Scenario3Steps {
 		}
 
 		Thread.sleep(500);
-
+		
+		//2 wrongs can make 1 right here. This algorithm is open for improvement.
 		totalAddsUp=separatePriceFromText(scenario3PF.getDivCurrentCartTotal())==(totalExtrafees-currentShipmentTotal)+currentCartTotal;
 	}
 
@@ -181,7 +177,7 @@ public class Scenario3Steps {
 
 	@Then("the extra cost should be added to the cart total.")
 	public void the_extra_cost_should_be_added_to_the_cart_total() {
-		assert(totalAddsUp);
+		assertTrue(totalAddsUp);
 	}
 
 	//this step can't check if the delivery date will be in the next year.
@@ -198,12 +194,7 @@ public class Scenario3Steps {
 			}
 
 		}
-	}
 
-	//	@After
-	//	public void endTest() throws IOException {
-	//		File htmlFile = new File("C:\\Users\\omarr\\eclipse-workspace\\HepsiBuradaBDDTest06102021\\target\\htmlReports.html");
-	//		Desktop.getDesktop().browse(htmlFile.toURI());
-	////		driver.quit();
-	//	}
+		chromeDriver.quit();
+	}
 }

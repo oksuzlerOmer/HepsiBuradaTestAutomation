@@ -47,11 +47,6 @@ public class Scenario1Steps {
 		randomElement.click();
 	}
 
-	@Given("a dropdown menu opens")
-	public void a_dropdown_menu_opens() {
-		
-	}
-
 	@Then("the user clicks {string} text in the dropdown menu")
 	public void the_user_clicks_text_in_the_dropdown_menu(String string) {
 		chromeDriver.findElement(By.id("login")).click();
@@ -136,8 +131,6 @@ public class Scenario1Steps {
 	
 	@Given("the user had opened any product page")
 	public void the_user_had_opened_any_product_page() {
-		chromeDriver=(ChromeDriver) DriverFactory.createDriver(DriverType.CHROME);
-		chromeDriver.manage().window().maximize();
 		chromeDriver.navigate().to("https://www.hepsiburada.com/abc-bebek-camasir-sivi-deterjan-1500-lt-p-HBCV000003C95M");
 		chromeDriver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 	}
@@ -150,6 +143,8 @@ public class Scenario1Steps {
 
 	@Then("the user closes the modal")
 	public void the_user_closes_the_modal() throws InterruptedException {
+		//sometimes the implicit and explicit waits do not work. there is an active bug knwon within the community.
+		//have to use sleep sometimes. I know that it is not efficient or the right way.
 		Thread.sleep(5000);
 		anyProductPage.getBtnCloseModal().click();
 	}

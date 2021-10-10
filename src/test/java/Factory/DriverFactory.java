@@ -11,23 +11,21 @@ public class DriverFactory {
 	public enum DriverType
 	{CHROME,FIREFOX,EDGE};
 
+	//For the sake of simplicity only chrome driver will used throughout the tests.
 	public static RemoteWebDriver createDriver(DriverType type) {
 		switch(type) {
 		case CHROME:
-			System.setProperty("webdriver.chrome.driver","C:\\Users\\omarr\\eclipse-workspace\\HepsiBuradaBDDTest06102021\\src\\test\\resources\\drivers\\chromedriver.exe");
+			System.setProperty("webdriver.chrome.driver","./src/test/resources/drivers/chromedriver.exe");
 			return new ChromeDriver();
 		case FIREFOX:
-			System.setProperty("webdriver.gecko.driver","C:\\Users\\omarr\\eclipse-workspace\\HepsiBuradaBDDTest06102021\\src\\test\\resources\\drivers\\geckodriver.exe");
+			System.setProperty("webdriver.gecko.driver","./src/test/resources/drivers/geckodriver.exe");
 			return new FirefoxDriver();
 		case EDGE:
-			System.setProperty("webdriver.msedge.driver","C:\\Users\\omarr\\eclipse-workspace\\HepsiBuradaBDDTest06102021\\src\\test\\resources\\drivers\\msedge.exe");
+			System.setProperty("webdriver.msedge.driver","./src/test/resources/drivers/msedge.exe");
 			return new EdgeDriver();
 		default: 
-			System.setProperty("webdriver.chrome.driver","C:\\Users\\omarr\\eclipse-workspace\\HepsiBuradaBDDTest06102021\\src\\test\\resources\\drivers\\chromedriver.exe");
+			System.setProperty("webdriver.chrome.driver","./src/test/resources/drivers/chromedriver.exe");
 			return new ChromeDriver();
 		}
 	}
-
-
-
 }
