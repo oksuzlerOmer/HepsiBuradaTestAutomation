@@ -38,18 +38,22 @@ public class Scenario3Steps {
 
 	List<WebElement> extraShipmentFees=null;
 
-	@Before
-	public void initTest() {
+	//	@Before
+	//	public void initTest() {
+	//		System.setProperty("webdriver.chrome.driver","C:\\Users\\omarr\\eclipse-workspace\\HepsiBuradaBDDTest06102021\\src\\test\\resources\\drivers\\chromedriver.exe");
+	//		driver=new ChromeDriver();
+	//		driver.manage().window().maximize();
+	//		scenario3PF=new Scenario3PF2(driver);
+	//		driver.navigate().to("https://www.hepsiburada.com/uyelik/giris");
+	//	}
+
+	@Given("the user logged in")
+	public void the_user_logged_in() throws InterruptedException {
 		System.setProperty("webdriver.chrome.driver","C:\\Users\\omarr\\eclipse-workspace\\HepsiBuradaBDDTest06102021\\src\\test\\resources\\drivers\\chromedriver.exe");
 		driver=new ChromeDriver();
 		driver.manage().window().maximize();
 		scenario3PF=new Scenario3PF2(driver);
 		driver.navigate().to("https://www.hepsiburada.com/uyelik/giris");
-	}
-	
-	@Given("the user logged in")
-	public void the_user_logged_in() throws InterruptedException {
-		
 		driver.manage().timeouts().implicitlyWait(3000, TimeUnit.MILLISECONDS);
 		driver.findElement(By.id("txtUserName")).clear();
 		driver.findElement(By.id("txtUserName")).sendKeys("testhb6102021@gmail.com");
@@ -191,14 +195,14 @@ public class Scenario3Steps {
 			for(WebElement el: group.findElements(By.xpath(".//div[@class=\"delivery_date_1ZuyW\"]/span[1]"))) {
 				assertTrue(tmpDate.before(sdf.parse(el.getText())));
 			}
-			
+
 		}
 	}
-	
-	@After
-	public void endTest() throws IOException {
-		File htmlFile = new File("C:\\Users\\omarr\\eclipse-workspace\\HepsiBuradaBDDTest06102021\\target\\htmlReports.html");
-		Desktop.getDesktop().browse(htmlFile.toURI());
-//		driver.quit();
-	}
+
+	//	@After
+	//	public void endTest() throws IOException {
+	//		File htmlFile = new File("C:\\Users\\omarr\\eclipse-workspace\\HepsiBuradaBDDTest06102021\\target\\htmlReports.html");
+	//		Desktop.getDesktop().browse(htmlFile.toURI());
+	////		driver.quit();
+	//	}
 }
