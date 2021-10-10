@@ -10,12 +10,6 @@ import org.openqa.selenium.support.PageFactory;
 
 public class Scenario3PF2 {
 
-	@FindBy(id="txtUserName")
-	private WebElement username;
-
-	@FindBy(id="txtPassword")
-	private WebElement password;
-
 	@FindBy(xpath="//button[@id=\"addToCart\"]")
 	private WebElement btnAddToCart;
 	
@@ -37,8 +31,17 @@ public class Scenario3PF2 {
 	@FindBys(value = { @FindBy(xpath="//div[contains(@class,\"price_2Ur69\") and (text())]") })
 	private List<WebElement> extraShippingFees;
 	
-	@FindBy(xpath="//div[@id=\"basket_payedPrice\"]/div[1]")
+	@FindBy(xpath="(//div[@class=\"price_1D8UZ\"])[1]")
+	private WebElement divCurrentShipmentTotal;
+	
+	@FindBy(xpath="(//div[@class=\"price_1D8UZ\"])[2]")
+	private WebElement divCurrentProductsCost;
+	
+	@FindBy(xpath="//div[@id=\"basket_payedPrice\"]/div")
 	private WebElement divCurrentCartTotal;
+	
+	@FindBys(value = @FindBy(xpath="//div[@class=\"group_list_2x6wU\"]"))
+	private List<WebElement> shipmentGroups;
 
 	private WebDriver driver;
 	public Scenario3PF2(WebDriver driver) {
@@ -87,12 +90,32 @@ public class Scenario3PF2 {
 	public void setExtraShippingFees(List<WebElement> extraShippingFees) {
 		this.extraShippingFees = extraShippingFees;
 	}
+	public WebElement getDivCurrentShipmentTotal() {
+		return divCurrentShipmentTotal;
+	}
+	public void setDivCurrentShipmentTotal(WebElement divCurrentShipmentTotal) {
+		this.divCurrentShipmentTotal = divCurrentShipmentTotal;
+	}
 	public WebElement getDivCurrentCartTotal() {
 		return divCurrentCartTotal;
 	}
 	public void setDivCurrentCartTotal(WebElement divCurrentCartTotal) {
 		this.divCurrentCartTotal = divCurrentCartTotal;
 	}
+	public WebElement getDivCurrentProductsCost() {
+		return divCurrentProductsCost;
+	}
+	public void setDivCurrentProductsCost(WebElement divCurrentProductsCost) {
+		this.divCurrentProductsCost = divCurrentProductsCost;
+	}
+	public List<WebElement> getShipmentGroups() {
+		return shipmentGroups;
+	}
+	public void setShipmentGroups(List<WebElement> shipmentGroups) {
+		this.shipmentGroups = shipmentGroups;
+	}
+	
+	
 	
 	
 	

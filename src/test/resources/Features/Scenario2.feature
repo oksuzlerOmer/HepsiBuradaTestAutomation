@@ -2,7 +2,6 @@
 #Scenario: user opens hepsiburada.com homepage, navigates under a category and adds a product to cart
 Feature: navigating categories and adding to cart features
 
-  @smoke
   Scenario: user opens hepsiburada.com homepage, navigates under a category and adds a product to cart
     #firstPart
     Given the user has opened hepsiburada.com homepage on their browser

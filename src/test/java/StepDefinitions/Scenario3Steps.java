@@ -2,6 +2,13 @@ package StepDefinitions;
 
 import static org.junit.Assert.assertTrue;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -19,15 +26,17 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class Scenario3Steps {
-	
+
 	static WebDriver driver=null;
 	WebElement randomElement=null;
 	Scenario3PF2 scenario3PF;
 	int itemsInCart=0;
 	int extraShipmentFeesCount=0;
-	float totalExtrafees=0;
+	boolean totalAddsUp=false;
+	Date tmpDate=null;
+
 	List<WebElement> extraShipmentFees=null;
-	float currentCartTotal=0;
+
 	@Given("the user logged in")
 	public void the_user_logged_in() throws InterruptedException {
 		System.setProperty("webdriver.chrome.driver","C:\\Users\\omarr\\eclipse-workspace\\HepsiBuradaBDDTest06102021\\src\\test\\resources\\drivers\\chromedriver.exe");
@@ -44,9 +53,9 @@ public class Scenario3Steps {
 		driver.findElement(By.id("txtPassword")).sendKeys("rs8jhYx8AZ86");
 		driver.findElement(By.id("txtPassword")).sendKeys(Keys.ENTER);
 		Thread.sleep(5000);
-		
+
 	}
-	
+
 	@Given("the user has added random eight products to their cart.")
 	public void the_user_has_added_random_eight_products_to_their_cart() throws InterruptedException {
 		//fix chromedriver.exe location
@@ -60,7 +69,7 @@ public class Scenario3Steps {
 				"https://www.hepsiburada.com/spotclean-pet-pro-evcil-hayvanli-evlere-ozel-hali-koltuk-yikama-ve-leke-cikarma-makinesi-p-HBCV00000S3YX8",
 				"https://www.hepsiburada.com/abc-matik-gul-tutkusu-toz-deterjan-6-kg-p-HBV00000PJBVP"
 		};
-		
+
 		for (int i = 0; i < 0; i++) {
 			driver.navigate().to(urls[i]);
 			Thread.sleep(4000);
@@ -79,28 +88,28 @@ public class Scenario3Steps {
 		} catch (Exception e) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
 	@Given("the user opens their cart")
 	public void the_user_opens_their_cart() throws InterruptedException {
-	    scenario3PF.getBtnGoToCart().click();
-	    Thread.sleep(4000);
+		scenario3PF.getBtnGoToCart().click();
+		Thread.sleep(4000);
 	}
 
 	@When("the user clicks {string} button \\(sc3)")
 	public void the_user_clicks_button_sc3(String string) throws InterruptedException {
-	  itemsInCart=driver.findElements(By.id("selectedCheckBox")).size();
-	  scenario3PF.getBtnCompletePurchase().click();
-	  driver.manage().timeouts().implicitlyWait(3000, TimeUnit.MILLISECONDS);
-	  Thread.sleep(4000);
+		itemsInCart=driver.findElements(By.id("selectedCheckBox")).size();
+		scenario3PF.getBtnCompletePurchase().click();
+		driver.manage().timeouts().implicitlyWait(3000, TimeUnit.MILLISECONDS);
+		Thread.sleep(4000);
 	}
 
 	@Then("the user is navigated to delivery options phase.")
 	public void the_user_is_navigated_to_delivery_options_phase() throws InterruptedException {
-	    scenario3PF.getDivShipmentAddress().click();
-		  Thread.sleep(4000);
+		scenario3PF.getDivShipmentAddress().click();
+		Thread.sleep(4000);
 	}
 
 	@Given("the user had already defined two different delivery addresses.")
@@ -120,7 +129,7 @@ public class Scenario3Steps {
 		WebElement el=driver.findElement(By.xpath("//div[contains(@class,\"shipping_options_container\")]"));
 		String str1=el.getText();
 		scenario3PF.getUnselectedAddress().click();
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 		String str2=el.getText()+"";
 		assertTrue(!str1.equals(str2));
 		scenario3PF.getUnselectedAddress().click();
@@ -131,23 +140,28 @@ public class Scenario3Steps {
 	public void a_delivery_option_with_more_cost_than_the_default_exists() {
 		extraShipmentFees=scenario3PF.getExtraShippingFees();
 		extraShipmentFeesCount=extraShipmentFees.size();
-		assertTrue(extraShipmentFeesCount>0);
+		//		assertTrue(extraShipmentFeesCount>0);
 	}
 
 	@Then("the user selects the extra cost option")
 	public void the_user_selects_the_extra_cost_option() throws InterruptedException {
-		currentCartTotal=separatePriceFromText(scenario3PF.getDivCurrentCartTotal());
-		System.out.println(":::::::::"+currentCartTotal);
+		float currentCartTotal=separatePriceFromText(scenario3PF.getDivCurrentCartTotal());
+		float currentProductsCostTotal=separatePriceFromText(scenario3PF.getDivCurrentProductsCost());
+		float currentShipmentTotal=0;
+		float totalExtrafees=0;
+
+		currentShipmentTotal=separatePriceFromText(scenario3PF.getDivCurrentShipmentTotal());
 		for (WebElement el : extraShipmentFees) {
 			el.click();
 			totalExtrafees+=separatePriceFromText(el);
-			System.out.println("abc:::::::"+totalExtrafees);
 			Thread.sleep(200);
 		}
-		
-		System.out.println(";;;;;;;;;;;;;;;;;;"+(currentCartTotal+totalExtrafees));
+
+		Thread.sleep(500);
+
+		totalAddsUp=separatePriceFromText(scenario3PF.getDivCurrentCartTotal())==(totalExtrafees-currentShipmentTotal)+currentCartTotal;
 	}
-	
+
 	private float separatePriceFromText(WebElement el) {
 		String str=el.getText().replace(".", "");
 		str=str.replace(",", ".");
@@ -156,13 +170,23 @@ public class Scenario3Steps {
 
 	@Then("the extra cost should be added to the cart total.")
 	public void the_extra_cost_should_be_added_to_the_cart_total() {
-	   
+		assert(totalAddsUp);
 	}
 
 	@Then("the approximately calculated shipping dates should not be later than the calculated delivery dates.")
-	public void the_approximately_calculated_shipping_dates_should_not_be_later_than_the_calculated_delivery_dates() {
-	   
+	public void the_approximately_calculated_shipping_dates_should_not_be_later_than_the_calculated_delivery_dates() throws ParseException {
+		List<WebElement> shipmentGroups=scenario3PF.getShipmentGroups();
+		SimpleDateFormat sdf= new SimpleDateFormat("dd MMM");
+		WebElement tmpEl;
+		for (WebElement group : shipmentGroups) {
+			tmpEl=group.findElement(By.xpath(".//div[@class=\"shipping_date_CMJ8d\"]/span[1]"));
+			tmpDate=sdf.parse(tmpEl.getText());
+			for(WebElement el: group.findElements(By.xpath(".//div[@class=\"delivery_date_1ZuyW\"]/span[1]"))) {
+				assertTrue(tmpDate.before(sdf.parse(el.getText())));
+			}
+			
+		}
 	}
 
-	
+
 }
