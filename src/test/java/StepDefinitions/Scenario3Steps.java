@@ -19,6 +19,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import Factory.DriverFactory;
+import Factory.DriverFactory.DriverType;
 import PageFactory.Scenario3PF2;
 import io.cucumber.java.Before;
 import io.cucumber.java.After;
@@ -28,13 +30,13 @@ import io.cucumber.java.en.When;
 
 public class Scenario3Steps {
 
-	static WebDriver driver=null;
 	WebElement randomElement=null;
 	Scenario3PF2 scenario3PF;
 	int itemsInCart=0;
 	int extraShipmentFeesCount=0;
 	boolean totalAddsUp=false;
 	Date tmpDate=null;
+	private ChromeDriver chromeDriver=null;
 
 	List<WebElement> extraShipmentFees=null;
 
@@ -49,19 +51,18 @@ public class Scenario3Steps {
 
 	@Given("the user logged in")
 	public void the_user_logged_in() throws InterruptedException {
-		System.setProperty("webdriver.chrome.driver","C:\\Users\\omarr\\eclipse-workspace\\HepsiBuradaBDDTest06102021\\src\\test\\resources\\drivers\\chromedriver.exe");
-		driver=new ChromeDriver();
-		driver.manage().window().maximize();
-		scenario3PF=new Scenario3PF2(driver);
-		driver.navigate().to("https://www.hepsiburada.com/uyelik/giris");
-		driver.manage().timeouts().implicitlyWait(3000, TimeUnit.MILLISECONDS);
-		driver.findElement(By.id("txtUserName")).clear();
-		driver.findElement(By.id("txtUserName")).sendKeys("testhb6102021@gmail.com");
-		driver.findElement(By.id("txtUserName")).sendKeys(Keys.ENTER);
-		driver.manage().timeouts().implicitlyWait(5000, TimeUnit.MILLISECONDS);
-		driver.findElement(By.id("txtPassword")).clear();
-		driver.findElement(By.id("txtPassword")).sendKeys("rs8jhYx8AZ86");
-		driver.findElement(By.id("txtPassword")).sendKeys(Keys.ENTER);
+		chromeDriver=(ChromeDriver) DriverFactory.createDriver(DriverType.CHROME);
+		chromeDriver.manage().window().maximize();
+		scenario3PF=new Scenario3PF2(chromeDriver);
+		chromeDriver.navigate().to("https://www.hepsiburada.com/uyelik/giris");
+		chromeDriver.manage().timeouts().implicitlyWait(3000, TimeUnit.MILLISECONDS);
+		chromeDriver.findElement(By.id("txtUserName")).clear();
+		chromeDriver.findElement(By.id("txtUserName")).sendKeys("testhb6102021@gmail.com");
+		chromeDriver.findElement(By.id("txtUserName")).sendKeys(Keys.ENTER);
+		chromeDriver.manage().timeouts().implicitlyWait(5000, TimeUnit.MILLISECONDS);
+		chromeDriver.findElement(By.id("txtPassword")).clear();
+		chromeDriver.findElement(By.id("txtPassword")).sendKeys("rs8jhYx8AZ86");
+		chromeDriver.findElement(By.id("txtPassword")).sendKeys(Keys.ENTER);
 		Thread.sleep(5000);
 
 	}
@@ -81,7 +82,7 @@ public class Scenario3Steps {
 		};
 
 		for (int i = 0; i < 0; i++) {
-			driver.navigate().to(urls[i]);
+			chromeDriver.navigate().to(urls[i]);
 			Thread.sleep(4000);
 			assertTrue(clickAddToCart(i==0?2:0));
 		}
@@ -92,7 +93,7 @@ public class Scenario3Steps {
 		try {
 			for (int i = 0; i < amount; i++) {
 				scenario3PF.getBtnPlus().click();
-				driver.manage().timeouts().implicitlyWait(300, TimeUnit.MILLISECONDS);
+				chromeDriver.manage().timeouts().implicitlyWait(300, TimeUnit.MILLISECONDS);
 			}
 			scenario3PF.getBtnAddToCart().click();
 		} catch (Exception e) {
@@ -110,9 +111,9 @@ public class Scenario3Steps {
 
 	@When("the user clicks {string} button \\(sc3)")
 	public void the_user_clicks_button_sc3(String string) throws InterruptedException {
-		itemsInCart=driver.findElements(By.id("selectedCheckBox")).size();
+		itemsInCart=chromeDriver.findElements(By.id("selectedCheckBox")).size();
 		scenario3PF.getBtnCompletePurchase().click();
-		driver.manage().timeouts().implicitlyWait(3000, TimeUnit.MILLISECONDS);
+		chromeDriver.manage().timeouts().implicitlyWait(3000, TimeUnit.MILLISECONDS);
 		Thread.sleep(4000);
 	}
 
@@ -124,19 +125,19 @@ public class Scenario3Steps {
 
 	@Given("the user had already defined two different delivery addresses.")
 	public void the_user_had_already_defined_two_different_delivery_addresses() {
-		WebDriverWait wait=new WebDriverWait(driver, 20);
+		WebDriverWait wait=new WebDriverWait(chromeDriver, 20);
 		wait.until(ExpectedConditions.elementToBeClickable(scenario3PF.getDivShipmentAddress()));
 		scenario3PF.getDivShipmentAddress().click();
 	}
 
 	@Then("the number of items grouped in the delivery options should match the count in the actual cart.")
 	public void the_number_of_items_grouped_in_the_delivery_options_should_match_the_count_in_the_actual_cart() {
-		assertTrue(itemsInCart==driver.findElements(By.xpath("//div[contains(text(),\"Kargoya veriliþ tarihi\")]")).size());
+		assertTrue(itemsInCart==chromeDriver.findElements(By.xpath("//div[contains(text(),\"Kargoya veriliþ tarihi\")]")).size());
 	}
 
 	@Then("the delivery options should change according to the selected delivery address.")
 	public void the_delivery_options_should_change_according_to_the_selected_delivery_address() throws InterruptedException {
-		WebElement el=driver.findElement(By.xpath("//div[contains(@class,\"shipping_options_container\")]"));
+		WebElement el=chromeDriver.findElement(By.xpath("//div[contains(@class,\"shipping_options_container\")]"));
 		String str1=el.getText();
 		scenario3PF.getUnselectedAddress().click();
 		Thread.sleep(2000);

@@ -23,6 +23,7 @@ public class HomePagePF {
 	private WebElement btnGoToCart;
 
 	private WebDriver driver;
+	
 	public HomePagePF(WebDriver driver) {
 		this.driver=driver;
 		PageFactory.initElements(driver, this);

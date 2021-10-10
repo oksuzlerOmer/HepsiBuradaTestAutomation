@@ -8,9 +8,15 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 
+import Factory.DriverFactory;
+import Factory.DriverFactory.DriverType;
+import PageFactory.LoginPagePF;
 import PageFactory.Scenario2PF;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -20,23 +26,45 @@ import io.cucumber.java.en.When;
 public class Scenario2Steps {
 	Scenario2PF scenario2PF=null;
 	Actions actions=null;
-	@Given("the user clicks on {string} text")
+	private ChromeDriver chromeDriver=null;
+	
+	@Given("the user goes to homepage")
+	public void the_user_opens_browser_sc2() {
+		chromeDriver=(ChromeDriver) DriverFactory.createDriver(DriverType.CHROME);
+		chromeDriver.manage().window().maximize();
+		chromeDriver.navigate().to(Scenario1Steps.HOMEPAGEURL);
+		scenario2PF=new Scenario2PF(chromeDriver);
+	}
+	
+	@And("the user clicks on {string} text")
 	public void the_user_clicks_on_text(String string) {
-		scenario2PF=new Scenario2PF(LoginSteps.driver);
-		actions= new Actions(LoginSteps.driver);
-		LoginSteps.driver.navigate().to(LoginSteps.HOMEPAGEURL);
+		actions= new Actions(chromeDriver);
 		scenario2PF.getWantedTopCategory().click();
 	}
+	
+	@Given("a dropdown menu opens \\(sc2)")
+	public void a_dropdown_menu_opens_sc2() throws InterruptedException {
+		Thread.sleep(3000);
+		WebElement tmpEl=null;
+		
+		try {
+			tmpEl=chromeDriver.findElement(By.xpath("//div[contains(@class,\"sf-MenuItems-2lSSo\")]"));
+			assertTrue(true);
+		} catch (NoSuchElementException e) {
+			assertTrue(false);
+		}
+	}
+
 
 	@When("the user clicks {string}")
 	public void the_user_clicks(String string) {
-		LoginSteps.driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+		chromeDriver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		scenario2PF.getRCCategory().click();
 	}
 
 	@Given("the user should be redirected to {string}")
 	public void the_user_should_be_redirected_to(String string) {
-
+		assertTrue(chromeDriver.getCurrentUrl().contains(string));
 	}
 
 	@Then("the user moves the cursor over the third product")
@@ -47,7 +75,11 @@ public class Scenario2Steps {
 
 	@Given("{string} button becomes visible")
 	public void button_becomes_visible(String string) {
-
+		try {
+			assertTrue(scenario2PF.getBtnAddToCart().isDisplayed());
+		} catch (NoSuchElementException e) {
+			assertTrue(false);
+		}
 	}
 
 	@And("the user clicks {string} button \\(sc2)")
@@ -58,7 +90,6 @@ public class Scenario2Steps {
 	@Then("a green {string} button should be displayed")
 	public void a_green_button_should_be_displayed(String string) throws InterruptedException {
 		Thread.sleep(200);
-		System.out.println(scenario2PF.getBtnAddedToCart().isDisplayed());
 		assertTrue(scenario2PF.getBtnAddedToCart().isDisplayed());
 
 	}
@@ -66,7 +97,7 @@ public class Scenario2Steps {
 	@Then("the user, from left, under {string}, clicks {string}")
 	public void the_user_from_left_under_clicks(String string, String string2) throws InterruptedException {
 		actions.moveToElement(scenario2PF.getDivDroneYedekParcalari()).perform();
-		WebDriver tmpDriver=LoginSteps.driver;
+		WebDriver tmpDriver=chromeDriver;
 		JavascriptExecutor js= (JavascriptExecutor) tmpDriver;
 		js.executeScript("arguments[0].scrollIntoView()",scenario2PF.getDivDroneYedekParcalari());
 		Thread.sleep(200);
